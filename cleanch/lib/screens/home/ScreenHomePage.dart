@@ -24,17 +24,19 @@ class _MapScreenState extends State<MapScreen> {
   get myLocation => AppConstants.myLocation;
   bool isExpanded = false;
 
-  // transparent color 
+  // transparent color
   Color fabButtonColor = Color.fromARGB(149, 147, 184, 179);
 
   // current loc
-  LatLng? currentLocation;
+  late LatLng? currentLocation = LatLng(0, 0);
 
   MapController _mapController = MapController();
 
   @override
   void initState() {
     super.initState();
+    currentLocation;
+    _mapController = MapController(); // Initialize the MapController here
     _getCurrentLocation();
   }
 
@@ -64,11 +66,11 @@ class _MapScreenState extends State<MapScreen> {
 
     try {
       Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
+        desiredAccuracy: LocationAccuracy.best,
       );
       setState(() {
         currentLocation = LatLng(position.latitude, position.longitude);
-        _mapController.move(currentLocation!, 10.0); // Adjust the initial zoom level here
+        _mapController.move(currentLocation!, _mapController.zoom);
       });
     } catch (e) {
       print("Error getting current location: $e");
@@ -119,7 +121,7 @@ class _MapScreenState extends State<MapScreen> {
               height: 60.0,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(isExpanded ? 30.0 : 60.0),
-                color: fabButtonColor, 
+                color: fabButtonColor,
               ),
               child: isExpanded
                   ? Row(
@@ -140,8 +142,8 @@ class _MapScreenState extends State<MapScreen> {
               FlutterMap(
                 mapController: _mapController,
                 options: MapOptions(
-                  center: currentLocation ?? LatLng(46.782094, 8.056870),
-                  zoom: 10.0, 
+                  center: currentLocation!,
+                  zoom: 10.0,
                   minZoom: 3.0,
                   maxZoom: 18.0,
                 ),
@@ -156,11 +158,20 @@ class _MapScreenState extends State<MapScreen> {
                     },
                   ),
                   CircleLayer(
-                   // my loc
+                    // my loc
                     circles: [
                       CircleMarker(
                         useRadiusInMeter: true,
-                        point: currentLocation ?? LatLng(46.782094, 8.056870),
+                        point: currentLocation!,
+                        color:
+                            Color.fromARGB(255, 35, 114, 134).withOpacity(0.5),
+                        borderColor: Color.fromARGB(255, 58, 99, 133),
+                        borderStrokeWidth: 5,
+                        radius: 180 - _mapController.zoom * 10,
+                      ),
+                      CircleMarker(
+                        useRadiusInMeter: true,
+                        point: LatLng(46.782094, 8.056870),
                         color: Colors.red.withOpacity(0.5),
                         borderColor: Colors.red,
                         borderStrokeWidth: 2,
@@ -203,7 +214,7 @@ class _MapScreenState extends State<MapScreen> {
                     child: FloatingActionButton(
                       onPressed: () {
                         if (currentLocation != null) {
-                          _mapController.move(currentLocation!, 10.0);
+                          _mapController.move(currentLocation!, 15);
                         }
                       },
                       child: Icon(Icons.my_location),
