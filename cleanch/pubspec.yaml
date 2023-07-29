@@ -45,7 +45,7 @@ dependencies:
   go_router: ^9.0.3
   url_launcher: ^6.1.12
   geolocator: ^9.0.2
-
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter
