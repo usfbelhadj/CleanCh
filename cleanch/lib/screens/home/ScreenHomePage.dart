@@ -4,6 +4,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter/foundation.dart';
+import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 
 import '../../map/AppConstants.dart';
 import '../../widgets/drawer_widget.dart';
