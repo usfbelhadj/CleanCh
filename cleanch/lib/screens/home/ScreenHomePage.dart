@@ -1,10 +1,9 @@
-import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-
 import 'package:url_launcher/url_launcher.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:flutter/foundation.dart';
 
 import '../../map/AppConstants.dart';
 import '../../widgets/drawer_widget.dart';
@@ -20,20 +19,66 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   get mapBoxAccessToken => AppConstants.mapBoxAccessToken;
-
   get mapBoxStyleId => AppConstants.mapBoxStyleId;
-
   get myLocation => AppConstants.myLocation;
-
   bool isExpanded = false;
+
+  // transparent color 
+  Color fabButtonColor = Color.fromARGB(149, 147, 184, 179);
+
+  // current loc
+  LatLng? currentLocation;
+
+  MapController _mapController = MapController();
+
+  @override
+  void initState() {
+    super.initState();
+    _getCurrentLocation();
+  }
+
+  // fetch current loc
+  Future<void> _getCurrentLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      print('Location services are disabled.');
+      return;
+    }
+
+    // permission
+    permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied) {
+      print('Location permissions are denied.');
+      return;
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      print(
+          'Location permissions are permanently denied, we cannot request permissions.');
+      return;
+    }
+
+    try {
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+      setState(() {
+        currentLocation = LatLng(position.latitude, position.longitude);
+        _mapController.move(currentLocation!, 10.0); // Adjust the initial zoom level here
+      });
+    } catch (e) {
+      print("Error getting current location: $e");
+    }
+  }
 
   void toggleExpand() {
     setState(() {
       isExpanded = !isExpanded;
     });
   }
-
-  Color fabButtonColor = Color.fromARGB(255, 59, 177, 161);
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +118,7 @@ class _MapScreenState extends State<MapScreen> {
               height: 60.0,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(isExpanded ? 30.0 : 60.0),
-                color: Color.fromARGB(255, 59, 177, 161),
+                color: fabButtonColor, 
               ),
               child: isExpanded
                   ? Row(
@@ -92,11 +137,12 @@ class _MapScreenState extends State<MapScreen> {
           body: Stack(
             children: [
               FlutterMap(
-                mapController: MapController(),
+                mapController: _mapController,
                 options: MapOptions(
-                  center: LatLng(
-                      46.782094, 8.056870), // Initial map center coordinates
-                  zoom: 7.5, // Initial zoom level
+                  center: currentLocation ?? LatLng(46.782094, 8.056870),
+                  zoom: 10.0, 
+                  minZoom: 3.0,
+                  maxZoom: 18.0,
                 ),
                 children: [
                   TileLayer(
@@ -109,11 +155,11 @@ class _MapScreenState extends State<MapScreen> {
                     },
                   ),
                   CircleLayer(
-                    // My location
+                   // my loc
                     circles: [
                       CircleMarker(
                         useRadiusInMeter: true,
-                        point: LatLng(46.782094, 8.056870),
+                        point: currentLocation ?? LatLng(46.782094, 8.056870),
                         color: Colors.red.withOpacity(0.5),
                         borderColor: Colors.red,
                         borderStrokeWidth: 2,
@@ -143,6 +189,25 @@ class _MapScreenState extends State<MapScreen> {
                     },
                     child: Icon(Icons.phone),
                     backgroundColor: fabButtonColor,
+                  ),
+                ),
+              ),
+              // curr loc but
+              Align(
+                alignment: Alignment.centerRight,
+                child: FractionallySizedBox(
+                  heightFactor: 0.2,
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 80.0, right: 16.0),
+                    child: FloatingActionButton(
+                      onPressed: () {
+                        if (currentLocation != null) {
+                          _mapController.move(currentLocation!, 10.0);
+                        }
+                      },
+                      child: Icon(Icons.my_location),
+                      backgroundColor: fabButtonColor,
+                    ),
                   ),
                 ),
               ),
