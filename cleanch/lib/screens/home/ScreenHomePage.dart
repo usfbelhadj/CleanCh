@@ -6,7 +6,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:flutter/foundation.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:flutter/services.dart'; 
+import 'package:flutter/services.dart'; // Add this import for SystemNavigator
 
 import '../../map/AppConstants.dart';
 import '../../widgets/drawer_widget.dart';
@@ -73,38 +73,39 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   // Check internet connectivity and close the app if there is no internet
-  Future<bool> _checkInternetAndCloseApp() async {
+  Future<bool> _checkInternetAndShowDialog() async {
     var connectivityResult = await Connectivity().checkConnectivity();
-    return connectivityResult != ConnectivityResult.none;
+    bool hasInternet = connectivityResult != ConnectivityResult.none;
+    if (!hasInternet) {
+      showDialog(
+        context: context,
+        barrierDismissible: false, // Prevent closing the dialog by tapping outside
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('No Internet Connection'),
+            content: Text('Please connect to the internet and try again.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close dialog
+                  SystemNavigator.pop(); // Close app
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+    return hasInternet;
   }
 
   @override
   void initState() {
     super.initState();
-    _checkInternetAndCloseApp().then((hasInternet) {
-      if (!hasInternet) {
-        showDialog(
-          context: context,
-          barrierDismissible: false, // Prevent closing the dialog by tapping outside
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text('No Internet Connection'),
-              content: Text('Please connect to the internet and try again.'),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(); 
-                    SystemNavigator.pop(); // Close app
-                  },
-                  child: Text('OK'),
-                ),
-              ],
-            );
-          },
-        );
-      } else {
-        _getCurrentLocation();
-      }
+    _getCurrentLocation();
+    Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+      _checkInternetAndShowDialog();
     });
   }
 
@@ -171,15 +172,15 @@ class _MapScreenState extends State<MapScreen> {
           body: Stack(
             children: [
               // loading on checking
-              FutureBuilder<bool>(
-                future: _checkInternetAndCloseApp(),
+                            FutureBuilder<bool>(
+                future: _checkInternetAndShowDialog(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(
                       child: CircularProgressIndicator(),
                     );
                   } else if (snapshot.data == false) {
-                    return Container(); // Rempty if no internet
+                    return Container(); // empty if no internet
                   }
 
                   // run if there is networK
