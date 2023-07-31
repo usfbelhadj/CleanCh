@@ -5,6 +5,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter/foundation.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/services.dart'; 
 
 import '../../map/AppConstants.dart';
 import '../../widgets/drawer_widget.dart';
@@ -70,18 +72,46 @@ class _MapScreenState extends State<MapScreen> {
     }
   }
 
-  void toggleExpand() {
-    setState(() {
-      isExpanded = !isExpanded;
-    });
+  // Check internet connectivity and close the app if there is no internet
+  Future<bool> _checkInternetAndCloseApp() async {
+    var connectivityResult = await Connectivity().checkConnectivity();
+    return connectivityResult != ConnectivityResult.none;
   }
 
   @override
   void initState() {
     super.initState();
-    currentLocation = myLocation;
-    _mapController; // Initialize the MapController here
-    _getCurrentLocation();
+    _checkInternetAndCloseApp().then((hasInternet) {
+      if (!hasInternet) {
+        showDialog(
+          context: context,
+          barrierDismissible: false, // Prevent closing the dialog by tapping outside
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('No Internet Connection'),
+              content: Text('Please connect to the internet and try again.'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(); 
+                    SystemNavigator.pop(); // Close app
+                  },
+                  child: Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      } else {
+        _getCurrentLocation();
+      }
+    });
+  }
+
+  void toggleExpand() {
+    setState(() {
+      isExpanded = !isExpanded;
+    });
   }
 
   @override
@@ -140,56 +170,71 @@ class _MapScreenState extends State<MapScreen> {
               FloatingActionButtonLocation.miniEndFloat,
           body: Stack(
             children: [
-              FlutterMap(
-                mapController: _mapController,
-                options: MapOptions(
-                  center: currentLocation ?? myLocation,
-                  zoom: 10.0,
-                  minZoom: 3.0,
-                  maxZoom: 18.0,
-                ),
-                children: [
-                  TileLayer(
-                    urlTemplate:
-                        "https://api.mapbox.com/styles/v1/{mapStyleId}/tiles/256/{z}/{x}/{y}@2x?access_token={accessToken}",
-                    additionalOptions: const {
-                      'mapStyleId': AppConstants.mapBoxStyleId,
-                      'accessToken': AppConstants.mapBoxAccessToken,
-                      'id': 'mapbox.mapbox-streets-v8',
-                    },
-                  ),
-                  CircleLayer(
-                    // my loc
-                    circles: [
-                      CircleMarker(
-                        useRadiusInMeter: true,
-                        point: currentLocation ?? myLocation,
-                        color:
-                            Color.fromARGB(255, 35, 114, 134).withOpacity(0.5),
-                        borderColor: Color.fromARGB(255, 58, 99, 133),
-                        borderStrokeWidth: 5,
-                        radius: 180,
+              // loading on checking
+              FutureBuilder<bool>(
+                future: _checkInternetAndCloseApp(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (snapshot.data == false) {
+                    return Container(); // Rempty if no internet
+                  }
+
+                  // run if there is networK
+                  return FlutterMap(
+                    mapController: _mapController,
+                    options: MapOptions(
+                      center: currentLocation ?? myLocation,
+                      zoom: 10.0,
+                      minZoom: 3.0,
+                      maxZoom: 18.0,
+                    ),
+                    children: [
+                      TileLayer(
+                        urlTemplate:
+                            "https://api.mapbox.com/styles/v1/{mapStyleId}/tiles/256/{z}/{x}/{y}@2x?access_token={accessToken}",
+                        additionalOptions: const {
+                          'mapStyleId': AppConstants.mapBoxStyleId,
+                          'accessToken': AppConstants.mapBoxAccessToken,
+                          'id': 'mapbox.mapbox-streets-v8',
+                        },
                       ),
-                      CircleMarker(
-                        useRadiusInMeter: true,
-                        point: LatLng(46.782094, 8.056870),
-                        color: Colors.red.withOpacity(0.5),
-                        borderColor: Colors.red,
-                        borderStrokeWidth: 2,
-                        radius: 5000,
-                      ),
-                      CircleMarker(
-                        useRadiusInMeter: true,
-                        point: LatLng(46.897, 7.490),
-                        color:
-                            Color.fromARGB(255, 16, 177, 16).withOpacity(0.5),
-                        borderColor: Color.fromARGB(255, 16, 177, 16),
-                        borderStrokeWidth: 2,
-                        radius: 5000,
-                      ),
+                      CircleLayer(
+                        // my loc
+                        circles: [
+                          CircleMarker(
+                            useRadiusInMeter: true,
+                            point: currentLocation ?? myLocation,
+                            color: Color.fromARGB(255, 35, 114, 134)
+                                .withOpacity(0.5),
+                            borderColor: Color.fromARGB(255, 58, 99, 133),
+                            borderStrokeWidth: 5,
+                            radius: 180,
+                          ),
+                          CircleMarker(
+                            useRadiusInMeter: true,
+                            point: LatLng(46.782094, 8.056870),
+                            color: Colors.red.withOpacity(0.5),
+                            borderColor: Colors.red,
+                            borderStrokeWidth: 2,
+                            radius: 5000,
+                          ),
+                          CircleMarker(
+                            useRadiusInMeter: true,
+                            point: LatLng(46.897, 7.490),
+                            color: Color.fromARGB(255, 16, 177, 16)
+                                .withOpacity(0.5),
+                            borderColor: Color.fromARGB(255, 16, 177, 16),
+                            borderStrokeWidth: 2,
+                            radius: 5000,
+                          ),
+                        ],
+                      )
                     ],
-                  )
-                ],
+                  );
+                },
               ),
               Align(
                 alignment: Alignment.bottomLeft,
@@ -217,7 +262,7 @@ class _MapScreenState extends State<MapScreen> {
                         if (currentLocation != null) {
                           _mapController.move(currentLocation!, 15);
                         }
-                        print('My Loction : $currentLocation');
+                        print('My Location : $currentLocation');
                       },
                       child: Icon(Icons.my_location),
                       backgroundColor: fabButtonColor,
