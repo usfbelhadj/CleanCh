@@ -1,7 +1,8 @@
+import 'package:cleanch/widgets/languageSelect.dart';
 import 'package:flutter/material.dart';
 
 class MyDrawer extends StatelessWidget {
-  const MyDrawer({super.key});
+  const MyDrawer({Key? key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +25,11 @@ class MyDrawer extends StatelessWidget {
               'johndoe@example.com',
               style: TextStyle(color: Colors.black),
             ),
-            currentAccountPicture: CircleAvatar(
-              foregroundImage: AssetImage('assets/images/avatar.jpg'),
+            currentAccountPicture: Hero(
+              tag: 'user_account_picture', // for test 
+              child: CircleAvatar(
+                foregroundImage: AssetImage('assets/images/avatar.jpg'),
+              ),
             ),
             decoration: BoxDecoration(
               color: Colors.white,
@@ -49,7 +53,14 @@ class MyDrawer extends StatelessWidget {
                 ListTile(
                   leading: Icon(Icons.settings),
                   title: Text('Settings'),
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LanguageSelectionPage(),
+                      ),
+                    );
+                  },
                 ),
                 ListTile(
                   leading: Icon(Icons.priority_high_rounded),
