@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import '../event/event_screen.dart';
 import '../profile/profile_screen.dart';
 import 'ScreenHomePage.dart';
@@ -11,7 +9,26 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  late PageController _pageController;
   int currentPageIndex = 1;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(initialPage: currentPageIndex);
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  void onPageChanged(int index) {
+    setState(() {
+      currentPageIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,9 +52,11 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
         onDestinationSelected: (int index) {
-          setState(() {
-            currentPageIndex = index;
-          });
+          _pageController.animateToPage(
+            index,
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.ease,
+          );
         },
         selectedIndex: currentPageIndex,
         backgroundColor: Colors.white,
@@ -45,11 +64,15 @@ class _HomeScreenState extends State<HomeScreen> {
         height: 60,
         labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
       ),
-      body: <Widget>[
-        EventScreen(),
-        MapScreen(),
-        ProfileScreen(),
-      ][currentPageIndex],
+      body: PageView(
+        controller: _pageController,
+        onPageChanged: onPageChanged,
+        children: <Widget>[
+          EventScreen(),
+          MapScreen(),
+          ProfileScreen(),
+        ],
+      ),
     );
   }
 }
