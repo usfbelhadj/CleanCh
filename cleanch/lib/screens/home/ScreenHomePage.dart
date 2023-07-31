@@ -28,17 +28,9 @@ class _MapScreenState extends State<MapScreen> {
   Color fabButtonColor = Color.fromARGB(149, 147, 184, 179);
 
   // current loc
-  late LatLng? currentLocation = LatLng(0, 0);
+  LatLng? currentLocation;
 
   MapController _mapController = MapController();
-
-  @override
-  void initState() {
-    super.initState();
-    currentLocation;
-    _mapController = MapController(); // Initialize the MapController here
-    _getCurrentLocation();
-  }
 
   // fetch current loc
   Future<void> _getCurrentLocation() async {
@@ -68,6 +60,7 @@ class _MapScreenState extends State<MapScreen> {
       Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.best,
       );
+
       setState(() {
         currentLocation = LatLng(position.latitude, position.longitude);
         _mapController.move(currentLocation!, _mapController.zoom);
@@ -81,6 +74,14 @@ class _MapScreenState extends State<MapScreen> {
     setState(() {
       isExpanded = !isExpanded;
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    currentLocation = myLocation;
+    _mapController; // Initialize the MapController here
+    _getCurrentLocation();
   }
 
   @override
@@ -142,7 +143,7 @@ class _MapScreenState extends State<MapScreen> {
               FlutterMap(
                 mapController: _mapController,
                 options: MapOptions(
-                  center: currentLocation!,
+                  center: currentLocation ?? myLocation,
                   zoom: 10.0,
                   minZoom: 3.0,
                   maxZoom: 18.0,
@@ -162,12 +163,12 @@ class _MapScreenState extends State<MapScreen> {
                     circles: [
                       CircleMarker(
                         useRadiusInMeter: true,
-                        point: currentLocation!,
+                        point: currentLocation ?? myLocation,
                         color:
                             Color.fromARGB(255, 35, 114, 134).withOpacity(0.5),
                         borderColor: Color.fromARGB(255, 58, 99, 133),
                         borderStrokeWidth: 5,
-                        radius: 180 - _mapController.zoom * 10,
+                        radius: 180,
                       ),
                       CircleMarker(
                         useRadiusInMeter: true,
@@ -216,6 +217,7 @@ class _MapScreenState extends State<MapScreen> {
                         if (currentLocation != null) {
                           _mapController.move(currentLocation!, 15);
                         }
+                        print('My Loction : $currentLocation');
                       },
                       child: Icon(Icons.my_location),
                       backgroundColor: fabButtonColor,
