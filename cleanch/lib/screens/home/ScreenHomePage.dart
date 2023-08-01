@@ -186,6 +186,8 @@ class _MapScreenState extends State<MapScreen>
                     zoom: 10.0,
                     minZoom: 3.0,
                     maxZoom: 18.0,
+                    interactiveFlags:
+                        InteractiveFlag.all & ~InteractiveFlag.rotate,
                   ),
                   children: [
                     TileLayer(
@@ -203,7 +205,8 @@ class _MapScreenState extends State<MapScreen>
                         CircleMarker(
                           useRadiusInMeter: true,
                           point: currentLocation ?? myLocation,
-                          color: Color.fromARGB(255, 35, 114, 134).withOpacity(0.5),
+                          color: Color.fromARGB(255, 35, 114, 134)
+                              .withOpacity(0.5),
                           borderColor: Color.fromARGB(255, 58, 99, 133),
                           borderStrokeWidth: 5,
                           radius: 180,
@@ -219,7 +222,8 @@ class _MapScreenState extends State<MapScreen>
                         CircleMarker(
                           useRadiusInMeter: true,
                           point: LatLng(46.897, 7.490),
-                          color: Color.fromARGB(255, 16, 177, 16).withOpacity(0.5),
+                          color:
+                              Color.fromARGB(255, 16, 177, 16).withOpacity(0.5),
                           borderColor: Color.fromARGB(255, 16, 177, 16),
                           borderStrokeWidth: 2,
                           radius: 5000,
