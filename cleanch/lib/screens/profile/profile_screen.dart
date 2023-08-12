@@ -1,8 +1,6 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart ';
 
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,100 +16,86 @@ class ProfileScreen extends StatelessWidget {
         ],
       ),
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Container(
-            padding: EdgeInsets.all(16.0),
-            color: Colors.blue,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                CircleAvatar(
-                  radius: 50,
-                  backgroundImage: AssetImage('assets/avatar.jpg'),
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(height: 20),
+          const Text(
+            'John Doe',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(height: 10),
+          Text(
+            'Frontend Developer',
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.grey,
+            ),
+          ),
+          SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.location_on, color: Colors.blue),
+              SizedBox(width: 5),
+              Text(
+                'New York, USA',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.blue,
                 ),
-                SizedBox(width: 16.0),
-                Column(
+              ),
+            ],
+          ),
+          SizedBox(height: 30),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Text(
+              'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eget risus a ante.',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 16),
+            ),
+          ),
+          SizedBox(height: 30),
+          Divider(color: Colors.black),
+          Container(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      'John Doe',
+                      'Interests',
                       style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 24.0,
+                        fontSize: 20.0,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     SizedBox(height: 8.0),
-                    Text(
-                      'johndoe@example.com',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16.0,
-                      ),
+                    Wrap(
+                      spacing: 8.0,
+                      runSpacing: 8.0,
+                      children: <Widget>[
+                        Chip(
+                          label: Text('Flutter'),
+                        ),
+                        Chip(
+                          label: Text('Mobile Development'),
+                        ),
+                        Chip(
+                          label: Text('UI/UX Design'),
+                        ),
+                        Chip(
+                          label: Text('Travel'),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  'About',
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(height: 8.0),
-                Text(
-                  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. '
-                  'Pellentesque semper diam vel sem fermentum dapibus. '
-                  'Vestibulum condimentum imperdiet risus, nec bibendum '
-                  'turpis consectetur sed. Mauris cursus faucibus dapibus.',
-                  style: TextStyle(
-                    fontSize: 16.0,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  'Interests',
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(height: 8.0),
-                Wrap(
-                  spacing: 8.0,
-                  runSpacing: 8.0,
-                  children: <Widget>[
-                    Chip(
-                      label: Text('Flutter'),
-                    ),
-                    Chip(
-                      label: Text('Mobile Development'),
-                    ),
-                    Chip(
-                      label: Text('UI/UX Design'),
-                    ),
-                    Chip(
-                      label: Text('Travel'),
-                    ),
-                  ],
-                ),
-              ],
+              ),
             ),
           ),
         ],

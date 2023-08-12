@@ -100,13 +100,7 @@ class WelcomePage extends StatelessWidget {
                           // sign in button
                           MyButton(
                             onTap: (() {
-                              if (_formKey.currentState!.validate() &&
-                                  phoneController.text.isNotEmpty &&
-                                  phoneController.text.length == 8) {
-                                handlePhone(context);
-                              } else {
-                                print('not valid');
-                              }
+                              handlePhone(context);
                             }),
                           ),
                         ],

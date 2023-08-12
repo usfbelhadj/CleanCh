@@ -16,16 +16,14 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     super.dispose();
   }
 
-  void _updateProfile() {
-    // Perform the profile update logic here
-    String name = _nameController.text;
-    String email = _emailController.text;
+  // void _updateProfile() {
+  //   // Perform the profile update logic here
+  //   String name = _nameController.text;
+  //   String email = _emailController.text;
 
-    // Print the updated profile information
-    print('Updated Profile:');
-    print('Name: $name');
-    print('Email: $email');
-  }
+  //   // Print the updated profile information
+
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +61,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
             ),
             SizedBox(height: 16.0),
             ElevatedButton(
-              onPressed: _updateProfile,
+              onPressed: null,
               child: Text('Update'),
             ),
           ],

@@ -9,21 +9,21 @@ import '../login/login.dart';
 
 class Signup extends StatelessWidget {
   // text editing controllers
-  final firstnaleController = TextEditingController();
+  final firstnameController = TextEditingController();
   final phoneController = TextEditingController();
   final emailController = TextEditingController();
-  final passwordController = TextEditingController();
+  final lastnameController = TextEditingController();
 
   Future<void> handleSignUp(BuildContext context) async {
-    String firstName = firstnaleController.text;
+    String firstName = firstnameController.text;
 
     String phone = phoneController.text;
 
     String email = emailController.text;
 
-    String password = passwordController.text;
+    String lastName = lastnameController.text;
 
-    String signUpStatus = await signUp(firstName, password, phone, email);
+    String signUpStatus = await signUp(firstName, lastName, phone, email);
 
     if (signUpStatus == 'Done') {
       UserDataProvider userDataProvider =
@@ -144,8 +144,14 @@ class Signup extends StatelessWidget {
                                               const SizedBox(height: 15),
 
                                               NameTextField(
-                                                controller: firstnaleController,
+                                                controller: firstnameController,
                                                 hintText: 'First Name',
+                                                obscureText: false,
+                                              ),
+                                              const SizedBox(height: 10),
+                                              NameTextField(
+                                                controller: lastnameController,
+                                                hintText: 'Last Name',
                                                 obscureText: false,
                                               ),
 
@@ -162,13 +168,6 @@ class Signup extends StatelessWidget {
                                                 controller: phoneController,
                                                 hintText: 'Phone Number',
                                                 obscureText: false,
-                                              ),
-
-                                              const SizedBox(height: 10),
-                                              MyPasswordTextField(
-                                                controller: passwordController,
-                                                hintText: 'Password',
-                                                obscureText: true,
                                               ),
 
                                               const SizedBox(height: 30),

@@ -25,12 +25,6 @@ class MyDrawer extends StatelessWidget {
               'johndoe@example.com',
               style: TextStyle(color: Colors.black),
             ),
-            currentAccountPicture: Hero(
-              tag: 'user_account_picture', // for test 
-              child: CircleAvatar(
-                foregroundImage: AssetImage('assets/images/avatar.jpg'),
-              ),
-            ),
             decoration: BoxDecoration(
               color: Colors.white,
             ),

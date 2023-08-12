@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "1003286560948",
+    "project_id": "cleanchtracking",
+    "storage_bucket": "cleanchtracking.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1003286560948:android:c1f45130e836222fd6d7e1",
+        "android_client_info": {
+          "package_name": "cleanch.api.test"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1003286560948-9dv74c9mjl1nbrbhigco7g9kbg7o3j62.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA3f1mY7BSzyO9LWnDfZI_E_Bz8V115Z8s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1003286560948-9dv74c9mjl1nbrbhigco7g9kbg7o3j62.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1003286560948:android:7a5aa0d50a35afc8d6d7e1",
+        "android_client_info": {
+          "package_name": "com.example.cleanch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1003286560948-9dv74c9mjl1nbrbhigco7g9kbg7o3j62.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA3f1mY7BSzyO9LWnDfZI_E_Bz8V115Z8s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1003286560948-9dv74c9mjl1nbrbhigco7g9kbg7o3j62.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

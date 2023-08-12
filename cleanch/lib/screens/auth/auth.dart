@@ -1,13 +1,13 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-Future<String> login(String phoneNumber, String password) async {
-  String url = 'http://54.82.91.150/api/auth/logins';
+Future<String> loginOTP(String phoneNumber, String password) async {
+  String url = 'http://api.cleanchtraffic.com:5000/api/auth/otp/';
 
   // Prepare the request body with username and password
   Map<String, String> body = {
-    'phonenumber': phoneNumber,
-    'password': password,
+    'phone': phoneNumber,
+    'otp': password,
   };
 
   // Send the POST request to the Flask authentication route
@@ -20,6 +20,7 @@ Future<String> login(String phoneNumber, String password) async {
 
   // Handle the response
   if (response.statusCode == 200) {
+    print(response.body);
     print('Done');
 
     return 'Done'; // Login successful
@@ -30,13 +31,13 @@ Future<String> login(String phoneNumber, String password) async {
 }
 
 Future<String> signUp(
-    String firstName, String password, String phone, String email) async {
-  String url = 'http://15.188.48.71:5000/auth/register';
+    String firstName, String lastName, String phone, String email) async {
+  String url = 'http://api.cleanchtraffic.com:5000/api/auth/registration/';
 
   Map<String, String> body = {
-    'name': firstName,
-    'password': password,
-    'phone_number': phone,
+    'first_name': firstName,
+    'last_name': lastName,
+    'phone': phone,
     'email': email,
   };
 
@@ -47,29 +48,24 @@ Future<String> signUp(
         'Content-Type': 'application/json'
       });
   print(response.statusCode);
-  print(response.body);
 
   if (response.statusCode == 201) {
-    var data = json.decode(response.body);
-    print(data['message']);
-    if (data['message'] == 'User has been registered.') {
-      return ('Done');
-    }
+    return ('Done');
   } else {
     // Sign-up failed, show error message
     print(response.body);
     return ('Not Done');
     // ...
   }
-  return "null";
 }
 
 Future<String> phoneNumberHandler(String phoneNumber) async {
-  String url = 'http://15.188.48.71:5000/auth/client-login';
+  print(phoneNumber);
+  String url = 'http://api.cleanchtraffic.com:5000/api/auth/phone_exists/';
 
   // Prepare the request body with username and password
   Map<String, String> body = {
-    'phone_number': phoneNumber,
+    'phone': phoneNumber,
   };
 
   // Send the POST request to the Flask authentication route

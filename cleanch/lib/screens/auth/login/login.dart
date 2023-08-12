@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../providers/user_data_provider.dart';
+import '../../home/home.dart';
 import '../auth.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -16,15 +17,15 @@ class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
 
   void handleLogin(BuildContext context) async {
-    String username = _PhoneController.text;
+    String phone = _PhoneController.text;
     String password = _passwordController.text;
 
-    String loginStatus = await login(username, password);
+    String loginStatus = await loginOTP(phone, password);
 
     if (loginStatus == 'Done') {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const MapScreen()),
+        MaterialPageRoute(builder: (context) => HomeScreen()),
       );
     } else {
       print('Login failed');
@@ -98,7 +99,7 @@ class LoginScreen extends StatelessWidget {
                                           MainAxisAlignment.center,
                                       children: [
                                         const Center(
-                                          child: Text("Login  ",
+                                          child: Text("Login ",
                                               // ignore: prefer_const_constructors
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
@@ -158,13 +159,7 @@ class LoginScreen extends StatelessWidget {
                                       vertical: 16, horizontal: 80),
                                   child: MyButton(
                                     onTap: (() {
-                                      // handlePhone(context);
-                                      Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const MapScreen()),
-                                      );
+                                      handleLogin(context);
                                     }),
                                   ),
                                 ),

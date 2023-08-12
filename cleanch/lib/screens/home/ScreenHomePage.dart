@@ -136,43 +136,21 @@ class _MapScreenState extends State<MapScreen>
         excludeHeaderSemantics: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: Builder(
-          builder: (BuildContext context) {
-            return IconButton(
-              icon: const Icon(
-                Icons.menu_rounded,
-                color: Colors.black,
-                size: 40,
-              ),
-              onPressed: () {
-                Scaffold.of(context).openDrawer();
-              },
-              tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-            );
-          },
-        ),
-      ),
-      floatingActionButton: GestureDetector(
-        trackpadScrollCausesScale: true,
-        onTap: toggleExpand,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          width: isExpanded ? 150.0 : 60.0,
-          height: 60.0,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(isExpanded ? 30.0 : 60.0),
-            color: fabButtonColor,
-          ),
-          child: isExpanded
-              ? Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Icon(Icons.report_problem_outlined, color: Colors.white),
-                    Icon(Icons.car_crash, color: Colors.white),
-                  ],
-                )
-              : Icon(Icons.add, color: Colors.white),
-        ),
+        // leading: Builder(
+        //   builder: (BuildContext context) {
+        //     return IconButton(
+        //       icon: const Icon(
+        //         Icons.menu_rounded,
+        //         color: Colors.black,
+        //         size: 40,
+        //       ),
+        //       onPressed: () {
+        //         Scaffold.of(context).openDrawer();
+        //       },
+        //       tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+        //     );
+        //   },
+        // ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
       body: Stack(
@@ -235,20 +213,7 @@ class _MapScreenState extends State<MapScreen>
               : Center(
                   child: CircularProgressIndicator(),
                 ),
-          Align(
-            alignment: Alignment.bottomLeft,
-            child: Padding(
-              padding: EdgeInsets.all(16.0),
-              child: FloatingActionButton(
-                onPressed: () {
-                  String phoneNumber = '55856615';
-                  launch("tel:$phoneNumber");
-                },
-                child: Icon(Icons.phone),
-                backgroundColor: fabButtonColor,
-              ),
-            ),
-          ),
+
           // curr loc but
           Align(
             alignment: Alignment.centerRight,
